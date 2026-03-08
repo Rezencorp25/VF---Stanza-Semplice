@@ -50,9 +50,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import * as ReactWindow from 'react-window';
-// @ts-ignore
-const { FixedSizeList } = ReactWindow;
+import { FixedSizeList } from 'react-window';
 // @ts-ignore
 type ListChildComponentProps = any;
 import { LazyImage } from '../components/LazyImage';
@@ -75,117 +73,116 @@ const ApartmentRow = React.memo(({ index, style, data }: ListChildComponentProps
 
   // Determine status badge
   const isAvailable = apt.status === 'active' && occupancyRate < 100;
-  const statusBadge = apt.status === 'active' 
-    ? (isAvailable 
-        ? <span className="bg-blue-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Disponibile</span>
-        : <span className="bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Completo</span>)
-    : <span className="bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Manutenzione</span>;
 
   return (
-    <div style={style} className="px-4 pb-6">
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full relative overflow-hidden">
-        {/* Image Section */}
-        <div className="h-48 bg-slate-200 relative overflow-hidden shrink-0">
-            <LazyImage 
-              src={`https://picsum.photos/seed/${apt.id}/800/400`} 
-              alt={`Apartment ${apt.unitNumber}`} 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              containerClassName="w-full h-full"
-            />
-            
-            {/* Status Badge (Top Left) */}
-            <div className="absolute top-4 left-4 z-20">
-              {statusBadge}
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full relative">
+      {/* Image Section */}
+      <div className="h-48 bg-slate-200 relative overflow-hidden shrink-0 rounded-t-2xl">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+          <LazyImage 
+            src={`https://picsum.photos/seed/${apt.id}/800/400`} 
+            alt={`Apartment ${apt.unitNumber}`} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            containerClassName="w-full h-full"
+          />
+          
+          {/* Status Badge */}
+          <div className="absolute top-4 left-4 z-20">
+            <div className={`
+              flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold shadow-md backdrop-blur-md border border-white/20 transition-all duration-500 ease-out overflow-hidden whitespace-nowrap
+              ${apt.status === 'active' ? (isAvailable ? 'bg-blue-500/90 text-white' : 'bg-green-500/90 text-white') : 
+                'bg-amber-500/90 text-white'}
+            `}>
+               {apt.status === 'active' ? (isAvailable ? <DoorOpen size={12}/> : <CheckCircle size={12}/>) : <AlertTriangle size={12}/>}
+               <span>
+                  {apt.status === 'active' ? (isAvailable ? 'Disponibile' : 'Completo') : 'Manutenzione'}
+               </span>
             </div>
+          </div>
 
-            {/* Menu Button (Top Right) */}
-            <div className="absolute top-4 right-4 z-20">
-               <div className="relative">
-                  <button 
-                    onClick={(e) => data.toggleMenu(e, `apt-${apt.id}`)}
-                    className="w-8 h-8 bg-white/20 backdrop-blur-md hover:bg-white/40 rounded-full flex items-center justify-center text-white transition-colors"
-                  >
-                    <MoreVertical size={16} />
-                  </button>
-                  {data.renderMenu(`apt-${apt.id}`, true, undefined, undefined, () => onDelete(apt.id, `Int. ${apt.unitNumber}`))}
-               </div>
+          {/* Menu Button (Top Right) */}
+          <div className="absolute top-4 right-4 z-20">
+             <div className="relative">
+                <button 
+                  onClick={(e) => data.toggleMenu(e, `apt-${apt.id}`)}
+                  className="w-8 h-8 bg-white/20 backdrop-blur-md hover:bg-white/40 rounded-full flex items-center justify-center text-white transition-colors"
+                >
+                  <MoreVertical size={16} />
+                </button>
+                {data.renderMenu(`apt-${apt.id}`, true, undefined, undefined, () => onDelete(apt.id, `Int. ${apt.unitNumber}`))}
+             </div>
+          </div>
+
+          <div className="absolute bottom-4 left-4 z-20 text-white">
+            <h3 className="font-bold text-xl drop-shadow-sm">Interno {apt.unitNumber}</h3>
+            <div className="flex items-center gap-1 text-slate-200 text-sm mt-0.5 font-medium">
+              <Building2 size={14} />
+              <span>{building?.address} - Piano {apt.floor}</span>
             </div>
+          </div>
+      </div>
+      
+      {/* Content Body */}
+      <div className="p-6 flex flex-col flex-1 relative bg-white rounded-b-2xl">
+        <div className="flex justify-between items-start mb-6">
+          <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Rendita Stimata</span>
+            <span className="text-sm font-bold text-slate-800">€ {totalRevenue}</span>
+          </div>
         </div>
-        
-        {/* Content Body */}
-        <div className="p-5 flex flex-col flex-1">
-          {/* Header Info */}
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <div className="flex items-center gap-1.5 text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">
-                <Building2 size={12} />
-                <span>{building?.address}</span>
-              </div>
-              <h3 className="font-bold text-2xl text-slate-800 mb-0.5">
-                Interno {apt.unitNumber}
-              </h3>
-              <p className="text-sm text-slate-500 font-medium">Piano {apt.floor}</p>
-            </div>
-            
-            <div className="text-right">
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Rendita Stimata</p>
-              <p className="text-xl font-bold text-slate-800">€ {totalRevenue}</p>
-            </div>
-          </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
-             <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center gap-1">
-                <BedDouble size={20} className="text-orange-500 mb-1" />
-                <span className="font-bold text-slate-800 text-lg leading-none">{totalRooms}</span>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Stanze</span>
-             </div>
-             <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center gap-1">
-                <Bath size={20} className="text-blue-500 mb-1" />
-                <span className="font-bold text-slate-800 text-lg leading-none">{apt.bathrooms}</span>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bagni</span>
-             </div>
-             <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center gap-1">
-                <Maximize size={20} className="text-emerald-500 mb-1" />
-                <span className="font-bold text-slate-800 text-lg leading-none">{apt.mq || '-'}</span>
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">MQ</span>
-             </div>
-          </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+           <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center gap-1">
+              <BedDouble size={20} className="text-orange-500 mb-1" />
+              <span className="font-bold text-slate-800 text-lg leading-none">{totalRooms}</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Stanze</span>
+           </div>
+           <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center gap-1">
+              <Bath size={20} className="text-blue-500 mb-1" />
+              <span className="font-bold text-slate-800 text-lg leading-none">{apt.bathrooms}</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bagni</span>
+           </div>
+           <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col items-center justify-center gap-1">
+              <Maximize size={20} className="text-emerald-500 mb-1" />
+              <span className="font-bold text-slate-800 text-lg leading-none">{apt.mq || '-'}</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">MQ</span>
+           </div>
+        </div>
 
-          {/* Occupancy Bar */}
-          <div className="mb-6">
-             <div className="flex justify-between items-end mb-2">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Occupazione</span>
-                <span className="text-sm font-bold text-slate-800">{occupiedRooms}/{totalRooms}</span>
-             </div>
-             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-orange-500 rounded-full transition-all duration-1000 ease-out" 
-                  style={{width: `${occupancyRate}%`}} 
-                />
-             </div>
-          </div>
+        {/* Occupancy Bar */}
+        <div className="mb-6">
+           <div className="flex justify-between items-end mb-2">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Occupazione</span>
+              <span className="text-sm font-bold text-slate-800">{occupiedRooms}/{totalRooms}</span>
+           </div>
+           <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-orange-500 rounded-full transition-all duration-1000 ease-out" 
+                style={{width: `${occupancyRate}%`}} 
+              />
+           </div>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="mt-auto grid grid-cols-2 gap-3">
-            <button 
-              onClick={() => onEdit(apt)}
-              className="py-2.5 flex items-center justify-center gap-2 text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-sm active:scale-95"
-            >
-              <Edit size={16} />
-              <span>Modifica</span>
-            </button>
-            <button 
-              onClick={() => {
-                setFilterApartmentId(apt.id);
-                onNavigate('OBJECTS_ROOMS');
-              }}
-              className="py-2.5 flex items-center justify-center gap-2 text-sm font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95"
-            >
-              <span>Gestisci Stanze</span>
-              <ArrowRight size={16} />
-            </button>
-          </div>
+        {/* Action Buttons */}
+        <div className="mt-auto grid grid-cols-2 gap-3">
+          <button 
+            onClick={() => onEdit(apt)}
+            className="py-2.5 flex items-center justify-center gap-2 text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-sm active:scale-95"
+          >
+            <Edit size={16} />
+            <span>Modifica</span>
+          </button>
+          <button 
+            onClick={() => {
+              setFilterApartmentId(apt.id);
+              onNavigate('OBJECTS_ROOMS');
+            }}
+            className="py-2.5 flex items-center justify-center gap-2 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-xl transition-all shadow-md shadow-orange-200 active:scale-95"
+          >
+            <span>Gestisci Stanze</span>
+            <ArrowRight size={16} />
+          </button>
         </div>
       </div>
     </div>
@@ -328,68 +325,75 @@ const RoomCardRow = React.memo(({ index, style, data }: ListChildComponentProps)
   const apt = getApartment(room.apartmentId);
   const bld = getBuilding(room.buildingId);
   
-  const statusColor = room.status === 'available' ? 'bg-green-500' : 
-                      room.status === 'occupied' ? 'bg-blue-500' : 'bg-slate-500';
+  const statusColor = room.status === 'available' ? 'bg-green-500/90' : 
+                      room.status === 'occupied' ? 'bg-blue-500/90' : 'bg-slate-500/90';
   const statusLabel = room.status === 'available' ? 'Disponibile' : 
                       room.status === 'occupied' ? 'Affittata' : 'Manutenzione';
 
   return (
-    <div style={style} className="px-4 pb-4">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col overflow-hidden h-full relative">
-        <div className="h-40 bg-slate-100 relative shrink-0">
-           <LazyImage 
-              src={`https://picsum.photos/seed/${room.id}/400/300`} 
-              alt={room.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              containerClassName="w-full h-full"
-           />
-           <div className="absolute top-3 left-3 flex gap-2 z-10">
-              <span className={`${statusColor} text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm`}>
-                {statusLabel}
-              </span>
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group flex flex-col overflow-hidden h-full relative">
+      <div className="h-40 bg-slate-100 relative shrink-0 rounded-t-2xl">
+         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+         <LazyImage 
+            src={`https://picsum.photos/seed/${room.id}/400/300`} 
+            alt={room.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            containerClassName="w-full h-full"
+         />
+         <div className="absolute top-3 left-3 flex gap-2 z-20">
+            <div className={`flex items-center gap-1.5 ${statusColor} text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm backdrop-blur-md border border-white/20`}>
+              {room.status === 'available' ? <CheckCircle size={10}/> : room.status === 'occupied' ? <Key size={10}/> : <AlertTriangle size={10}/>}
+              <span>{statusLabel}</span>
+            </div>
+         </div>
+         
+         <div className="absolute top-3 right-3 z-20">
+           <div className="relative">
+              <button 
+                onClick={(e) => toggleMenu(e, `room-grid-${room.id}`)}
+                className="w-8 h-8 bg-white/20 backdrop-blur-md hover:bg-white/40 rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <MoreVertical size={16} />
+              </button>
+              {renderMenu(`room-grid-${room.id}`, true, undefined, () => setEditingRoom(room))}
            </div>
-           {apt && (
-             <div className="absolute top-3 right-3 z-10">
-                <span className="bg-white/90 backdrop-blur-sm text-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-white/20">
-                  Piano {apt.floor}
-                </span>
-             </div>
-           )}
-        </div>
-        <div className="p-4 flex flex-col flex-1">
-           <div className="mb-3">
-              <div className="flex justify-between items-start mb-1">
-                 <h3 className="font-bold text-lg text-slate-800 line-clamp-1" title={room.name}>{room.name}</h3>
-                 <button 
-                    onClick={(e) => toggleMenu(e, `room-grid-${room.id}`)}
-                    className="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition-colors -mr-1 -mt-1"
-                 >
-                    <MoreHorizontal size={18} />
-                 </button>
-                 {renderMenu(`room-grid-${room.id}`, true, undefined, () => setEditingRoom(room))}
-              </div>
-              <div className="flex flex-col gap-0.5">
-                 <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                    <Building2 size={12} />
-                    <span className="line-clamp-1">{bld?.address}</span>
-                 </div>
-                 <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                    <DoorOpen size={12} />
-                    <span>Int. {apt?.unitNumber}</span>
-                 </div>
-              </div>
+         </div>
+
+         <div className="absolute bottom-3 left-3 z-20 text-white">
+           <h3 className="font-bold text-lg drop-shadow-sm line-clamp-1" title={room.name}>{room.name}</h3>
+           <div className="flex items-center gap-1 text-slate-200 text-xs mt-0.5 font-medium">
+             <Building2 size={12} />
+             <span className="line-clamp-1">{bld?.address} - Int. {apt?.unitNumber}</span>
            </div>
-           <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
-                 <BedDouble size={14} className="text-orange-500" />
-                 <span className="text-xs font-bold">{room.type === 'single' ? '1' : '2'} Posti</span>
-              </div>
-              <div className="text-right">
-                 <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">Canone</span>
-                 <span className="font-bold text-slate-800">€ {room.price}<span className="text-xs font-normal text-slate-400">/mo</span></span>
-              </div>
-           </div>
-        </div>
+         </div>
+      </div>
+      <div className="p-4 flex flex-col flex-1 bg-white rounded-b-2xl">
+         <div className="mb-3 flex-1">
+            <div className="flex items-center justify-between mb-2">
+               <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
+                  <BedDouble size={14} className="text-orange-500" />
+                  <span className="text-xs font-bold">{room.type === 'single' ? '1' : '2'} Posti</span>
+               </div>
+               {apt && (
+                 <span className="bg-slate-50 text-slate-500 text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-100">
+                   Piano {apt.floor}
+                 </span>
+               )}
+            </div>
+         </div>
+         <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div className="text-left">
+               <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">Canone</span>
+               <span className="font-bold text-slate-800">€ {room.price}<span className="text-xs font-normal text-slate-400">/mo</span></span>
+            </div>
+            <button 
+              onClick={() => setEditingRoom(room)}
+              className="px-3 py-1.5 flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-lg transition-all shadow-sm active:scale-95"
+            >
+              <Edit size={12} />
+              <span>Modifica</span>
+            </button>
+         </div>
       </div>
     </div>
   );
@@ -1370,31 +1374,30 @@ export const Properties: React.FC<PropertiesProps> = ({ view, onNavigate, onNavi
         </div>
 
         {loadingApartments && apartments.length === 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => <ApartmentCardSkeleton key={i} />)}
           </div>
         ) : displayApartments.length > 0 ? (
-          <div className="h-[calc(100vh-350px)] min-h-[600px] w-full">
-            <FixedSizeList
-              height={700}
-              itemCount={displayApartments.length}
-              itemSize={540}
-              width="100%"
-              itemData={{
-                items: displayApartments,
-                onEdit: setEditingApartment,
-                onDelete: (id: string, name: string) => setDeleteModal({ isOpen: true, type: 'apartment', id, name }),
-                onNavigate,
-                setFilterApartmentId,
-                getBuilding,
-                getOwner,
-                MOCK_ROOMS,
-                toggleMenu,
-                renderMenu
-              }}
-            >
-              {ApartmentRow}
-            </FixedSizeList>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {displayApartments.map((apt, index) => (
+              <ApartmentRow 
+                key={apt.id}
+                index={index}
+                style={{}}
+                data={{
+                  items: displayApartments,
+                  onEdit: setEditingApartment,
+                  onDelete: (id: string, name: string) => setDeleteModal({ isOpen: true, type: 'apartment', id, name }),
+                  onNavigate,
+                  setFilterApartmentId,
+                  getBuilding,
+                  getOwner,
+                  MOCK_ROOMS,
+                  toggleMenu,
+                  renderMenu
+                }}
+              />
+            ))}
           </div>
         ) : (
           <div className="col-span-full">
@@ -1671,24 +1674,25 @@ export const Properties: React.FC<PropertiesProps> = ({ view, onNavigate, onNavi
             </div>
           </div>
         ) : (
-          <div className="h-[calc(100vh-350px)] min-h-[600px] w-full">
+          <div className="w-full">
             {displayRooms.length > 0 ? (
-              <FixedSizeList
-                height={700}
-                itemCount={displayRooms.length}
-                itemSize={380}
-                width="100%"
-                itemData={{
-                  items: displayRooms,
-                  getApartment,
-                  getBuilding,
-                  setEditingRoom,
-                  toggleMenu,
-                  renderMenu
-                }}
-              >
-                {RoomCardRow}
-              </FixedSizeList>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {displayRooms.map((room, index) => (
+                  <RoomCardRow 
+                    key={room.id}
+                    index={index}
+                    style={{}}
+                    data={{
+                      items: displayRooms,
+                      getApartment,
+                      getBuilding,
+                      setEditingRoom,
+                      toggleMenu,
+                      renderMenu
+                    }}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="col-span-full">
                 <EmptyState 

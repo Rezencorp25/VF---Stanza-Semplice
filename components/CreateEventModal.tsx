@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalPortal } from './ModalPortal';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { EventType } from '../types';
@@ -24,7 +25,8 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
   const formattedDate = format(date, 'dd MMMM yyyy', { locale: it });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white w-full max-w-sm rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -87,5 +89,6 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

@@ -367,7 +367,7 @@ export const EditApartmentModal: React.FC<EditApartmentModalProps> = ({ isOpen, 
   };
 
   return (
-    <ModalPortal onClose={handleExit}>
+    <ModalPortal>
       <div className="w-full h-full flex flex-col bg-slate-50 animate-in fade-in duration-200 overflow-hidden">
         
         {/* HEADER */}
@@ -986,7 +986,7 @@ export const EditApartmentModal: React.FC<EditApartmentModalProps> = ({ isOpen, 
 
       {/* EXIT CONFIRMATION DIALOG */}
       {showExitConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 animate-in zoom-in-95 duration-200">
             <div className="flex items-center gap-3 text-amber-500 mb-4">
               <AlertTriangle size={28} />

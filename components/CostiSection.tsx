@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { createPortal } from 'react-dom';
+import { ModalPortal } from './ModalPortal';
 import { 
   Plus, 
   Download, 
@@ -298,7 +298,8 @@ export const CostiSection: React.FC = () => {
 
   // MODAL CONTENT
   const modalContent = (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" onClick={handleCloseModal} />
       
       <div className="relative bg-white w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
@@ -509,6 +510,7 @@ export const CostiSection: React.FC = () => {
 
       </div>
     </div>
+    </ModalPortal>
   );
 
   return (
@@ -742,7 +744,7 @@ export const CostiSection: React.FC = () => {
       </div>
 
       {/* MODAL AGGIUNGI/MODIFICA (PORTALED to Body) */}
-      {modalOpen && createPortal(modalContent, document.body)}
+      {modalOpen && modalContent}
 
       {/* TOAST Notification */}
       {toast.visible && createPortal(

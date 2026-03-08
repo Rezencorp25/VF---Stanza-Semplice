@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalPortal } from '../ModalPortal';
 import { X, Edit, Mail, Phone, MapPin, Shield, Calendar, Clock, Activity, Lock, User, Building2, Network, Eye, EyeOff } from 'lucide-react';
 import { Collaborator } from '../../types';
 import { MOCK_COMPETENCE_GROUPS } from '../../constants';
@@ -34,7 +35,8 @@ export const CollaboratorDetailModal: React.FC<CollaboratorDetailModalProps> = (
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col">
         
         {/* Header with Profile Cover */}
@@ -247,5 +249,6 @@ export const CollaboratorDetailModal: React.FC<CollaboratorDetailModalProps> = (
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

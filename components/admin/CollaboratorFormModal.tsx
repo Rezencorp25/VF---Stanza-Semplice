@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from '../ModalPortal';
 import { X, Save, CheckCircle, AlertTriangle, Loader2, Eye, EyeOff, Clock } from 'lucide-react';
 import { Collaborator, CollaboratorRole } from '../../types';
 import { MOCK_COMPETENCE_GROUPS } from '../../constants';
@@ -156,11 +157,12 @@ export const CollaboratorFormModal: React.FC<CollaboratorFormModalProps> = ({
     : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-100 sticky top-0 bg-white z-10">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-white shrink-0">
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-bold text-slate-800">
               {collaborator ? 'Modifica Collaboratore' : 'Nuovo Collaboratore'}
@@ -179,24 +181,26 @@ export const CollaboratorFormModal: React.FC<CollaboratorFormModalProps> = ({
           )}
         </div>
 
-        {submitSuccess ? (
-          <div className="p-12 flex flex-col items-center justify-center text-center space-y-4 animate-in zoom-in duration-300">
-            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2">
-              <CheckCircle size={32} />
-            </div>
-            <h3 className="text-2xl font-bold text-slate-800">Collaboratore Creato!</h3>
-            <p className="text-slate-600 max-w-sm">
-              L'account per <strong>{formData.firstName} {formData.lastName}</strong> è stato creato con successo.
-            </p>
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mt-4 w-full max-w-md">
-              <p className="text-sm text-slate-600">
-                Email di conferma inviata a:<br/>
-                <strong className="text-slate-800">{formData.email}</strong>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          {submitSuccess ? (
+            <div className="p-12 flex flex-col items-center justify-center text-center space-y-4 animate-in zoom-in duration-300">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2">
+                <CheckCircle size={32} />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800">Collaboratore Creato!</h3>
+              <p className="text-slate-600 max-w-sm">
+                L'account per <strong>{formData.firstName} {formData.lastName}</strong> è stato creato con successo.
               </p>
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mt-4 w-full max-w-md">
+                <p className="text-sm text-slate-600">
+                  Email di conferma inviata a:<br/>
+                  <strong className="text-slate-800">{formData.email}</strong>
+                </p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          ) : (
+            <form onSubmit={handleSubmit} className="p-6 space-y-6">
             
             {submitError && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-start gap-3 animate-in slide-in-from-top-2">
@@ -355,7 +359,7 @@ export const CollaboratorFormModal: React.FC<CollaboratorFormModalProps> = ({
             </div>
 
             {/* Footer */}
-            <div className="pt-6 border-t border-slate-100 flex justify-end gap-3 mt-8">
+            <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-white shrink-0">
               <button 
                 type="button"
                 onClick={onClose}
@@ -383,9 +387,11 @@ export const CollaboratorFormModal: React.FC<CollaboratorFormModalProps> = ({
               </button>
             </div>
           </form>
-        )}
+          )}
+        </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { 
   X, 
   Save, 
@@ -335,7 +336,8 @@ export const EditContractModal: React.FC<EditContractModalProps> = ({ isOpen, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-50 animate-in fade-in duration-200 overflow-hidden">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex flex-col bg-slate-50 animate-in fade-in duration-200 overflow-hidden">
       
       {/* HEADER */}
       <div className="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm z-10 shrink-0">
@@ -862,5 +864,6 @@ export const EditContractModal: React.FC<EditContractModalProps> = ({ isOpen, on
         onClose={() => setIsDocumentsModalOpen(false)}
       />
     </div>
+    </ModalPortal>
   );
 };

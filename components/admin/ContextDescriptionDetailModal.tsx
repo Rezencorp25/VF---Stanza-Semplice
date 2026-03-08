@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalPortal } from '../ModalPortal';
 import { X, Edit, Building2, Info, Calendar } from 'lucide-react';
 import { ContextDescription } from '../../types';
 import { MOCK_CONTEXT_DESCRIPTIONS } from '../../constants';
@@ -21,7 +22,8 @@ export const ContextDescriptionDetailModal: React.FC<ContextDescriptionDetailMod
   const allContexts = [...MOCK_CONTEXT_DESCRIPTIONS].sort((a, b) => b.qualityLevel - a.qualityLevel);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col">
         
         {/* Header */}
@@ -126,5 +128,6 @@ export const ContextDescriptionDetailModal: React.FC<ContextDescriptionDetailMod
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

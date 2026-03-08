@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { Eye, EyeOff, ShieldCheck, AlertTriangle, Loader2 } from 'lucide-react';
 
 interface ForcePasswordChangeModalProps {
@@ -66,7 +67,8 @@ export const ForcePasswordChangeModal: React.FC<ForcePasswordChangeModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-300">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-300">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
         
         {/* Header con pattern decorativo */}
@@ -164,5 +166,6 @@ export const ForcePasswordChangeModal: React.FC<ForcePasswordChangeModalProps> =
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { Booking, BookingStatus, UserRole } from '../types';
 import { X, User, Shield, FileText, ReceiptEuro, CalendarClock, FileCheck, CreditCard } from 'lucide-react';
 import { BookingActions } from './BookingActions';
@@ -103,15 +104,15 @@ export const BookingDrawer: React.FC<BookingDrawerProps> = ({
   };
 
   return (
-    <>
+    <ModalPortal>
       {/* Overlay */}
       <div 
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity animate-in fade-in duration-300"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9998] transition-opacity animate-in fade-in duration-300"
         onClick={onClose}
       />
 
       {/* Drawer Panel */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-[700px] bg-slate-50 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 border-l border-white/50">
+      <div className="fixed inset-y-0 right-0 z-[9999] w-full max-w-[700px] bg-slate-50 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 border-l border-white/50">
         
         {/* Header */}
         <div className="flex-shrink-0 px-6 py-5 bg-white border-b border-slate-200 shadow-sm z-20">
@@ -207,6 +208,6 @@ export const BookingDrawer: React.FC<BookingDrawerProps> = ({
         </div>
 
       </div>
-    </>
+    </ModalPortal>
   );
 };

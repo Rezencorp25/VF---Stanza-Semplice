@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { Property } from '../types';
 import { X, Save, MapPin, Map, Building2, User, Phone, Mail, CheckSquare, ExternalLink } from 'lucide-react';
 
@@ -57,7 +58,8 @@ export const BuildingDrawer: React.FC<BuildingDrawerProps> = ({
   const headerIconClass = "p-2 bg-orange-50 text-orange-600 rounded-lg mr-3";
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-8">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 lg:p-8">
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
@@ -374,5 +376,6 @@ export const BuildingDrawer: React.FC<BuildingDrawerProps> = ({
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

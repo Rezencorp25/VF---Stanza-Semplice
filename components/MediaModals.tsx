@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { 
   X, 
   Image as ImageIcon, 
@@ -41,7 +42,8 @@ export const PublicImagesModal: React.FC<PublicImagesModalProps> = ({ isOpen, on
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[900px] max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -140,6 +142,7 @@ export const PublicImagesModal: React.FC<PublicImagesModalProps> = ({ isOpen, on
 
       </div>
     </div>
+    </ModalPortal>
   );
 };
 
@@ -147,7 +150,8 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({ isOpen, onClose 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[900px] max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -247,5 +251,6 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({ isOpen, onClose 
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

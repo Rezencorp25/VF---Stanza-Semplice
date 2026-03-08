@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { 
   X, 
   Save, 
@@ -173,7 +174,8 @@ export const EditRoomModal: React.FC<EditRoomModalProps> = ({ isOpen, onClose, r
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-50 animate-in fade-in duration-200 overflow-hidden">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex flex-col bg-slate-50 animate-in fade-in duration-200 overflow-hidden">
       
       {/* HEADER */}
       <div className="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm z-10 shrink-0">
@@ -633,5 +635,6 @@ export const EditRoomModal: React.FC<EditRoomModalProps> = ({ isOpen, onClose, r
         onClose={() => setIsImagesModalOpen(false)} 
       />
     </div>
+    </ModalPortal>
   );
 };

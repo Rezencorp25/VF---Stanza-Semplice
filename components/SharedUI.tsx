@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { X, AlertTriangle, Trash2, Loader2 } from 'lucide-react';
 
 // --- EMPTY STATE ---
@@ -104,7 +105,8 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="p-6 text-center">
           <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
@@ -136,5 +138,6 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

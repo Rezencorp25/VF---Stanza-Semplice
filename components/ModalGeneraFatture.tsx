@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { format, parse } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { 
@@ -54,7 +55,8 @@ export const ModalGeneraFatture: React.FC<ModalGeneraFattureProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       
       {/* Overlay */}
       <div 
@@ -197,5 +199,6 @@ export const ModalGeneraFatture: React.FC<ModalGeneraFattureProps> = ({
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

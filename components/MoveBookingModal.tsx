@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { Booking } from '../types';
 import { X, User, Calendar, CreditCard, ArrowRight, CheckCircle2, Building2 } from 'lucide-react';
 import { format, differenceInDays, addDays } from 'date-fns';
@@ -45,7 +46,8 @@ export const MoveBookingModal: React.FC<MoveBookingModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Blurred Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity animate-in fade-in duration-300"
@@ -224,5 +226,6 @@ export const MoveBookingModal: React.FC<MoveBookingModalProps> = ({
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

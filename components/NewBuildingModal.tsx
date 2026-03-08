@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { X, Save, Building2, MapPin, Map, UserCheck, AlertCircle } from 'lucide-react';
 
 interface NewBuildingModalProps {
@@ -75,11 +76,12 @@ export const NewBuildingModal: React.FC<NewBuildingModalProps> = ({ isOpen, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[860px] max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-start bg-white z-10">
+        <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-start bg-white shrink-0">
           <div>
             <h2 className="text-xl font-bold text-slate-800">Nuovo Fabbricato</h2>
             <p className="text-sm text-slate-500 mt-0.5">Inserisci i dati anagrafici e di configurazione dell'immobile</p>
@@ -415,7 +417,7 @@ export const NewBuildingModal: React.FC<NewBuildingModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center z-10">
+        <div className="px-6 py-4 border-t border-slate-100 bg-white shrink-0 flex justify-between items-center">
           <button 
             onClick={onClose}
             className="px-6 py-2.5 text-slate-600 font-bold text-sm hover:bg-slate-200 rounded-xl transition-colors"
@@ -433,5 +435,6 @@ export const NewBuildingModal: React.FC<NewBuildingModalProps> = ({ isOpen, onCl
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

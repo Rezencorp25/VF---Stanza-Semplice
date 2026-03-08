@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { 
@@ -102,15 +103,15 @@ export const DrawerDettaglioFattura: React.FC<DrawerDettaglioFatturaProps> = ({
     : timelineSteps.findIndex(s => s.id === fattura.stato);
 
   return (
-    <>
+    <ModalPortal>
       {/* Overlay */}
       <div 
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity animate-in fade-in duration-300"
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[9998] transition-opacity animate-in fade-in duration-300"
         onClick={onClose}
       />
 
       {/* Drawer Panel */}
-      <div className="fixed top-0 right-0 z-50 h-full w-full max-w-[480px] bg-white shadow-[-8px_0_32px_rgba(0,0,0,0.12)] flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="fixed top-0 right-0 z-[9999] h-full w-full max-w-[480px] bg-white shadow-[-8px_0_32px_rgba(0,0,0,0.12)] flex flex-col animate-in slide-in-from-right duration-300">
         
         {/* HEADER */}
         <div className="px-6 py-5 border-b border-slate-200 flex-shrink-0 bg-white z-10">
@@ -351,6 +352,6 @@ export const DrawerDettaglioFattura: React.FC<DrawerDettaglioFatturaProps> = ({
         </div>
 
       </div>
-    </>
+    </ModalPortal>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalPortal } from '../ModalPortal';
 import { X, Edit, Users, Building2, MapPin, UserCheck, Calendar } from 'lucide-react';
 import { CompetenceGroup } from '../../types';
 import { MOCK_CITIES, MOCK_COLLABORATORS } from '../../constants';
@@ -23,7 +24,8 @@ export const CompetenceGroupDetailModal: React.FC<CompetenceGroupDetailModalProp
   const collaborators = MOCK_COLLABORATORS.filter(c => group.collaboratorIds.includes(c.id));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <ModalPortal>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto flex flex-col">
         
         {/* Header */}
@@ -204,5 +206,6 @@ export const CompetenceGroupDetailModal: React.FC<CompetenceGroupDetailModalProp
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };
