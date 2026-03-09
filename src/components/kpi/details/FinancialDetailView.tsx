@@ -9,7 +9,7 @@ import {
   Layers
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { KpiSection } from '../KpiSection';
+import { KpiCard } from '../KpiCard';
 import { FilterState } from '../../../types/kpi';
 import { getArea2Data, Area2Data } from '../mockDataArea2';
 import { KpiStackedBarChart } from '../charts/KpiStackedBarChart';
@@ -77,6 +77,28 @@ export const FinancialDetailView: React.FC<FinancialDetailViewProps> = ({ filter
 
   const activeKeys = getActiveKeys().slice(0, 4);
 
+  // Calculate summary values
+  const latestStructural = data?.structuralRevenue[data.structuralRevenue.length - 1];
+  const structuralValue = latestStructural
+    ? activeKeys.reduce((acc, key) => acc + (latestStructural[key] as number || 0), 0).toLocaleString()
+    : 0;
+
+  const avgRoomPrice = "450"; // Mocked for simplicity as in AreaCard
+
+  const latestOther = data?.otherRevenue[data.otherRevenue.length - 1];
+  const otherValue = latestOther
+    ? ((latestOther['Servizi'] as number || 0) + (latestOther['Penali'] as number || 0) + (latestOther['Extra'] as number || 0) + (latestOther['Altro'] as number || 0)).toLocaleString()
+    : 0;
+
+  const latestAvgRoom = data?.avgRoomRevenue[data.avgRoomRevenue.length - 1];
+  const avgRoomValue = latestAvgRoom ? latestAvgRoom.avg.toLocaleString() : 0;
+
+  const latestCredit = data?.creditNotes[data.creditNotes.length - 1];
+  const creditValue = latestCredit ? latestCredit.value.toLocaleString() : 0;
+
+  const funnelStart = data?.revenueFunnel[0];
+  const funnelValue = funnelStart ? funnelStart.value.toLocaleString() : 0;
+
   return (
     <div className="space-y-8 pb-12">
       <AnimatePresence mode="wait">
@@ -101,103 +123,145 @@ export const FinancialDetailView: React.FC<FinancialDetailViewProps> = ({ filter
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
           >
             {/* 1. Ricavi Strutturali */}
-            <KpiSection 
+            <KpiCard 
               title="Ricavi Strutturali" 
-              description="Totale ricavi mensili suddivisi per raggruppamento."
+              value={structuralValue}
+              unit="€"
               icon={<BarChart3 size={20} />}
-            >
-              <KpiStackedBarChart 
-                data={data?.structuralRevenue || []} 
-                dataKeys={activeKeys} 
-                isLoading={isLoading}
-                hasError={hasError}
-                onRetry={handleRetry}
-              />
-            </KpiSection>
+              color="#3b82f6"
+              description="Il totale dei ricavi generati direttamente dall'affitto delle stanze, escludendo servizi extra o penali."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiStackedBarChart 
+                    data={data?.structuralRevenue || []} 
+                    dataKeys={activeKeys} 
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    onRetry={handleRetry}
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 2. Distribuzione Prezzi */}
-            <KpiSection 
+            <KpiCard 
               title="Distribuzione Prezzi" 
-              description="Analisi delle fasce di prezzo e budget."
+              value={avgRoomPrice}
+              unit="€"
               icon={<DollarSign size={20} />}
-            >
-              <KpiDarkBarChart 
-                data={data?.priceDistribution || []} 
-                dataKey="value" 
-                nameKey="range"
-                unit=""
-                isLoading={isLoading}
-                hasError={hasError}
-                onRetry={handleRetry}
-              />
-            </KpiSection>
+              color="#f97316"
+              description="Analisi della distribuzione delle stanze per fasce di prezzo, utile per comprendere il posizionamento sul mercato."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiDarkBarChart 
+                    data={data?.priceDistribution || []} 
+                    dataKey="value" 
+                    nameKey="range"
+                    unit=""
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    onRetry={handleRetry}
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 3. Altri Ricavi Mensili */}
-            <KpiSection 
+            <KpiCard 
               title="Altri Ricavi Mensili" 
-              description="Breakdown per categoria (Servizi, Penali, Extra)."
+              value={otherValue}
+              unit="€"
               icon={<Wallet size={20} />}
-            >
-              <KpiGroupedBarChart 
-                data={data?.otherRevenue || []} 
-                dataKeys={['Servizi', 'Penali', 'Extra', 'Altro']} 
-                isLoading={isLoading}
-                hasError={hasError}
-                onRetry={handleRetry}
-              />
-            </KpiSection>
+              color="#8b5cf6"
+              description="Ricavi accessori generati da servizi aggiuntivi, penali applicate o altre voci non legate direttamente al canone di affitto."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiGroupedBarChart 
+                    data={data?.otherRevenue || []} 
+                    dataKeys={['Servizi', 'Penali', 'Extra', 'Altro']} 
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    onRetry={handleRetry}
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 4. Ricavo Medio Stanza */}
-            <KpiSection 
+            <KpiCard 
               title="Ricavo Medio Stanza" 
-              description="Trend del ricavo medio con range min/max."
+              value={avgRoomValue}
+              unit="€"
               icon={<TrendingUp size={20} />}
-            >
-              <KpiRangeLineChart 
-                data={data?.avgRoomRevenue || []} 
-                dataKey="avg" 
-                minKey="min"
-                maxKey="max"
-                isLoading={isLoading}
-                hasError={hasError}
-                onRetry={handleRetry}
-              />
-            </KpiSection>
+              color="#10b981"
+              description="Il ricavo medio generato da una singola stanza affittata, calcolato come Ricavi Strutturali / Stanze Occupate."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiRangeLineChart 
+                    data={data?.avgRoomRevenue || []} 
+                    dataKey="avg" 
+                    minKey="min"
+                    maxKey="max"
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    onRetry={handleRetry}
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 5. Note Credito */}
-            <KpiSection 
+            <KpiCard 
               title="Note Credito" 
-              description="Monitoraggio emissioni note di credito."
+              value={creditValue}
+              unit="€"
               icon={<CreditCard size={20} />}
-            >
-              <KpiNegativeBarChart 
-                data={data?.creditNotes || []} 
-                dataKey="value" 
-                countKey="count"
-                isLoading={isLoading}
-                hasError={hasError}
-                onRetry={handleRetry}
-              />
-            </KpiSection>
+              color="#ef4444"
+              description="Valore totale e numero delle note di credito emesse, che riducono il fatturato effettivo."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiNegativeBarChart 
+                    data={data?.creditNotes || []} 
+                    dataKey="value" 
+                    countKey="count"
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    onRetry={handleRetry}
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 6. Tipologie Ricavo (Funnel) */}
-            <KpiSection 
+            <KpiCard 
               title="Tipologie Ricavo nel Periodo" 
-              description="Analisi a cascata dal fatturato all'utile."
+              value={funnelValue}
+              unit="€"
               icon={<Layers size={20} />}
-            >
-              <KpiFunnelChart 
-                data={data?.revenueFunnel || []} 
-                dataKey="value" 
-                nameKey="step"
-                isLoading={isLoading}
-                hasError={hasError}
-                onRetry={handleRetry}
-              />
-            </KpiSection>
+              color="#0ea5e9"
+              description="Rappresentazione a cascata (funnel) che mostra come il fatturato lordo si riduce fino all'utile netto."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiFunnelChart 
+                    data={data?.revenueFunnel || []} 
+                    dataKey="value" 
+                    nameKey="step"
+                    isLoading={isLoading}
+                    hasError={hasError}
+                    onRetry={handleRetry}
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
           </motion.div>
         )}
       </AnimatePresence>

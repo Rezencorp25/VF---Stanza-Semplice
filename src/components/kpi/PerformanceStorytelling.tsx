@@ -57,7 +57,7 @@ export const PerformanceStorytelling: React.FC<PerformanceStorytellingProps> = (
             score={94}
             onClick={() => onAreaClick('occupancy')}
             metrics={[
-              { label: 'Occupancy', value: '94.2%', subValue: '+1.2% vs target', color: 'text-slate-900' },
+              { label: 'Occupancy nel tempo', value: '94.2%', subValue: '+1.2% vs target', color: 'text-slate-900' },
               { label: 'Stanze Attive', value: 142 },
               { label: 'MQ Disponibili', value: '3.450', subValue: 'm²' },
               { label: 'Giorni Riaffitto', value: 12.4, subValue: 'gg', color: 'text-orange-500' }

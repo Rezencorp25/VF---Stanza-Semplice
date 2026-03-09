@@ -70,7 +70,13 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ currentView, onNavigat
   }
 
   // Current Page
-  if (currentView !== 'DASHBOARD') {
+  if (currentView === 'DASHBOARD') {
+    parts.push({ 
+      label: 'Dashboard', 
+      view: 'DASHBOARD',
+      active: true
+    });
+  } else {
     parts.push({ 
       label: VIEW_LABELS[currentView] || currentView, 
       view: currentView,

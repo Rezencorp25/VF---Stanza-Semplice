@@ -8,7 +8,7 @@ import {
   Maximize
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { KpiSection } from '../KpiSection';
+import { KpiCard } from '../KpiCard';
 import { FilterState } from '../../../types/kpi';
 import { getArea1Data, Area1Data } from '../mockDataArea1';
 import { KpiLineChart } from '../charts/KpiLineChart';
@@ -54,6 +54,26 @@ export const OccupancyDetailView: React.FC<OccupancyDetailViewProps> = ({ filter
 
   const activeKeys = getActiveKeys().slice(0, 4); // Limit to 4 for visualization
 
+  // Calculate summary values
+  const latestOccupancy = data?.occupancy[data.occupancy.length - 1];
+  const occupancyValue = latestOccupancy 
+    ? (activeKeys.reduce((acc, key) => acc + (latestOccupancy[key] as number || 0), 0) / activeKeys.length).toFixed(1)
+    : 0;
+
+  const latestActiveRooms = data?.activeRooms[data.activeRooms.length - 1];
+  const activeRoomsValue = latestActiveRooms
+    ? activeKeys.reduce((acc, key) => acc + (latestActiveRooms[key] as number || 0), 0)
+    : 0;
+
+  const latestAvailableSqM = data?.availableSqM[data.availableSqM.length - 1];
+  const availableSqMValue = latestAvailableSqM
+    ? activeKeys.reduce((acc, key) => acc + (latestAvailableSqM[key] as number || 0), 0).toLocaleString()
+    : 0;
+
+  const reRentDaysValue = data?.reRentDays
+    ? (data.reRentDays.reduce((acc, curr) => acc + curr.days, 0) / data.reRentDays.length).toFixed(1)
+    : 0;
+
   return (
     <div className="space-y-8 pb-12">
       <AnimatePresence mode="wait">
@@ -78,65 +98,88 @@ export const OccupancyDetailView: React.FC<OccupancyDetailViewProps> = ({ filter
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
           >
             {/* 1. Occupancy nel tempo */}
-            <KpiSection 
+            <KpiCard 
               title="Occupancy nel tempo" 
-              description="Andamento percentuale dell'occupazione negli ultimi 12 mesi."
+              value={occupancyValue}
+              unit="%"
               icon={<TrendingUp size={20} />}
-            >
-              <KpiLineChart 
-                data={data.occupancy} 
-                dataKeys={activeKeys} 
-                targetValue={90}
-                unit="%"
-                onModifyFilters={onModifyFilters}
-              />
-            </KpiSection>
+              color="#3b82f6"
+              description="Misura la percentuale di stanze affittate rispetto al totale delle stanze disponibili. Calcolato come: (Stanze Affittate / Stanze Totali) * 100."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiLineChart 
+                    data={data.occupancy} 
+                    dataKeys={activeKeys} 
+                    targetValue={90}
+                    unit="%"
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 2. Stanze Attive */}
-            <KpiSection 
+            <KpiCard 
               title="Stanze Attive" 
-              description="Numero di stanze attive per raggruppamento."
+              value={activeRoomsValue}
               icon={<BarChart3 size={20} />}
-            >
-              <KpiBarChart 
-                data={data.activeRooms} 
-                dataKeys={activeKeys} 
-                onModifyFilters={onModifyFilters}
-              />
-            </KpiSection>
+              color="#22c55e"
+              description="Il numero totale di stanze attualmente disponibili e gestite nel portafoglio, pronte per essere affittate o già occupate."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiBarChart 
+                    data={data.activeRooms} 
+                    dataKeys={activeKeys} 
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 3. MQ Disponibili */}
-            <KpiSection 
+            <KpiCard 
               title="MQ Disponibili" 
-              description="Metri quadri totali disponibili per raggruppamento."
+              value={availableSqMValue}
+              unit="mq"
               icon={<Maximize size={20} />}
-            >
-              <KpiBarChart 
-                data={data.availableSqM} 
-                dataKeys={activeKeys} 
-                unit="mq"
-                onModifyFilters={onModifyFilters}
-              />
-            </KpiSection>
+              color="#f97316"
+              description="La superficie totale in metri quadrati di tutte le stanze e le aree comuni gestite nel portafoglio immobiliare."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiBarChart 
+                    data={data.availableSqM} 
+                    dataKeys={activeKeys} 
+                    unit="mq"
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
 
             {/* 4. Giorni medi di riaffitto */}
-            <KpiSection 
+            <KpiCard 
               title="Giorni medi di riaffitto" 
-              description="Tempo medio per riaffittare una stanza (Soglia: 7gg)."
+              value={reRentDaysValue}
+              unit="gg"
               icon={<Clock size={20} />}
-            >
-              <KpiHorizontalBarChart 
-                data={data.reRentDays} 
-                dataKey="days" 
-                nameKey="room"
-                threshold={7}
-                unit="gg"
-                onModifyFilters={onModifyFilters}
-              />
-            </KpiSection>
+              color="#a855f7"
+              description="Il tempo medio (in giorni) che intercorre tra l'uscita di un inquilino e l'ingresso del successivo. Un valore più basso indica maggiore efficienza."
+              details={
+                <div className="flex-1 flex flex-col">
+                  <KpiHorizontalBarChart 
+                    data={data.reRentDays} 
+                    dataKey="days" 
+                    nameKey="room"
+                    threshold={7}
+                    unit="gg"
+                    onModifyFilters={onModifyFilters}
+                  />
+                </div>
+              }
+            />
           </motion.div>
         )}
       </AnimatePresence>

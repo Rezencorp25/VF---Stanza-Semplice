@@ -94,7 +94,7 @@ export const KpiDetailScreen: React.FC<KpiDetailScreenProps> = ({
   return (
     <motion.div 
       layoutId={`area-card-${areaId}`}
-      className="fixed inset-0 bg-slate-50 z-50 overflow-hidden flex flex-col"
+      className="bg-white flex flex-col min-h-full rounded-3xl overflow-hidden shadow-sm border border-slate-100"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -159,17 +159,14 @@ export const KpiDetailScreen: React.FC<KpiDetailScreenProps> = ({
       )}
 
       {/* Scrollable Body */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
+      <div className="flex-1 p-6 md:p-8 space-y-8">
         {/* If children are provided (actual charts), show them, otherwise show placeholders */}
         {children ? (
           React.isValidElement(children) 
             ? React.cloneElement(children as React.ReactElement<any>, { 
                 filterState,
                 onModifyFilters: () => {
-                  const scrollContainer = document.querySelector('.overflow-y-auto');
-                  if (scrollContainer) {
-                    scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }) 
             : children

@@ -119,6 +119,8 @@ const App: React.FC = () => {
     setCurrentView(view);
     if (params) {
       setNavParams(params);
+    } else {
+      setNavParams(null);
     }
   };
 
@@ -183,7 +185,7 @@ const App: React.FC = () => {
         );
       
       case 'KPI':
-        return <KPI />;
+        return <KPI initialArea={navParams?.areaId} />;
 
       // --- Admin Section ---
       case 'ADMIN_DASHBOARD':
@@ -251,7 +253,9 @@ const App: React.FC = () => {
         
         <main className="flex-1 p-4 lg:p-8 overflow-x-hidden">
           <div className="max-w-7xl mx-auto w-full">
-            <Breadcrumbs currentView={currentView} onNavigate={handleNavigate} />
+            {currentView !== 'DASHBOARD' && (
+              <Breadcrumbs currentView={currentView} onNavigate={handleNavigate} />
+            )}
             {renderContent()}
           </div>
         </main>
