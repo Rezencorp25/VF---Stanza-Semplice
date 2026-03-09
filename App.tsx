@@ -12,6 +12,7 @@ import { Invoices } from './pages/Invoices';
 import { PagamentiSection } from './components/PagamentiSection'; 
 import { CostiSection } from './components/CostiSection'; 
 import { CashflowSection } from './components/CashflowSection'; // Importazione Cashflow
+import KPI from './pages/KPI';
 import { Contracts } from './pages/Contracts';
 import { Collaborators } from './pages/admin/Collaborators';
 import { Cities } from './pages/admin/Cities';
@@ -181,6 +182,9 @@ const App: React.FC = () => {
           </ContoEconomicoLayout>
         );
       
+      case 'KPI':
+        return <KPI />;
+
       // --- Admin Section ---
       case 'ADMIN_DASHBOARD':
         return <AdminDashboard onNavigate={handleNavigate} />;
