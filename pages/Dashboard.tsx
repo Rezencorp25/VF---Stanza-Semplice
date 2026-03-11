@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserRole, ViewState } from '../types';
 import { MOCK_KPI_DATA } from '../constants';
-import { ArrowUpRight, ArrowDownRight, TrendingUp, AlertCircle, CheckCircle2, DollarSign, Users, Wrench, Home, Calendar, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, TrendingUp, AlertCircle, CheckCircle2, DollarSign, Users, Wrench, Home, Calendar, ChevronRight, Newspaper, X } from 'lucide-react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Legend
 } from 'recharts';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRoleData } from '../hooks/useRoleData';
 import { KPICards } from '../components/KPICards';
 import { AlertOperativi } from '../components/AlertOperativi';
 import { RevenueChart } from '../components/RevenueChart';
-import { MarketTrendsSnapshot } from '../components/MarketTrendsSnapshot';
+import { MarketNewsModal } from '../components/MarketNewsModal';
 
 interface DashboardProps {
   currentRole: UserRole;
@@ -26,6 +27,7 @@ const dataOccupancy = [
 
 export const Dashboard: React.FC<DashboardProps> = ({ currentRole, onNavigate }) => {
   const roleData = useRoleData(currentRole);
+  const [isMarketNewsOpen, setIsMarketNewsOpen] = useState(false);
   
   const getSubtitle = () => {
     const today = new Date().toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -62,8 +64,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentRole, onNavigate })
           <p className="text-slate-500 text-sm mt-1">{getSubtitle()}</p>
         </div>
         
-        {/* Date Picker (Display only for now) */}
+        {/* Date Picker and Market News */}
         <div className="flex gap-2 self-start sm:self-auto mt-2 sm:mt-0">
+          <button 
+            onClick={() => setIsMarketNewsOpen(true)}
+            className="px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 hover:bg-slate-800 transition-colors"
+          >
+            <Newspaper size={16} />
+            Market News
+          </button>
           <span className="px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 shadow-sm flex items-center gap-2">
             <Calendar size={16} className="text-slate-400" />
             {new Date().toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -78,32 +87,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentRole, onNavigate })
       <AlertOperativi alerts={roleData.alerts} onNavigate={onNavigate} />
 
       {/* Main Charts Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+      <div className="mb-6">
         {/* Revenue Chart */}
         <RevenueChart data={roleData.revenueData} />
-
-        {/* Occupancy Stats */}
-        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
-          <h3 className="text-lg font-bold text-slate-800 mb-6">Occupazione</h3>
-          <div className="flex-1 w-full min-h-[250px] min-w-0">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <BarChart data={dataOccupancy} layout="vertical" barSize={20} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e2e8f0" />
-                <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 12, fontWeight: 500}} />
-                {/* <Tooltip cursor={{fill: '#f8fafc'}} /> */}
-                <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
-                <Bar dataKey="occupied" name="Occupati" stackId="a" fill="#f97316" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="vacant" name="Liberi" stackId="a" fill="#e2e8f0" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
       </div>
 
-      {/* Bottom Grid: Recent Activities & Market Trends */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Bottom Grid: Recent Activities */}
+      <div className="grid grid-cols-1 gap-6">
         {/* Recent Activities / Alerts */}
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-4">
@@ -136,10 +126,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentRole, onNavigate })
             ))}
           </div>
         </div>
-
-        {/* Market Trends Snapshot */}
-        <MarketTrendsSnapshot />
       </div>
+
+      {/* Market News Modal */}
+      <MarketNewsModal 
+        isOpen={isMarketNewsOpen} 
+        onClose={() => setIsMarketNewsOpen(false)} 
+      />
     </div>
   );
 };

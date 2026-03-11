@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Wrench, Home, CreditCard, ExternalLink } from 'lucide-react';
+import { AlertTriangle, Wrench, Home, CreditCard, ExternalLink, ChevronRight } from 'lucide-react';
 import { ViewState } from '../types';
 import { AlertData } from '../hooks/useRoleData';
 
@@ -36,73 +36,74 @@ export const AlertOperativi: React.FC<AlertOperativiProps> = ({ alerts, onNaviga
   const getStatusStyles = (status: 'red' | 'yellow' | 'green') => {
     switch (status) {
       case 'red':
-        return 'bg-red-50 border-red-200 text-red-800';
+        return 'bg-red-50 border-red-100 text-red-800 hover:border-red-200';
       case 'yellow':
-        return 'bg-amber-50 border-amber-200 text-amber-800';
+        return 'bg-amber-50 border-amber-100 text-amber-800 hover:border-amber-200';
       case 'green':
-        return 'bg-emerald-50 border-emerald-200 text-emerald-800';
+        return 'bg-emerald-50 border-emerald-100 text-emerald-800 hover:border-emerald-200';
     }
   };
 
   const getIconStyles = (status: 'red' | 'yellow' | 'green') => {
     switch (status) {
       case 'red':
-        return 'text-red-500 bg-red-100';
+        return 'text-red-500 bg-red-100/50';
       case 'yellow':
-        return 'text-amber-500 bg-amber-100';
+        return 'text-amber-500 bg-amber-100/50';
       case 'green':
-        return 'text-emerald-500 bg-emerald-100';
+        return 'text-emerald-500 bg-emerald-100/50';
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'pagamenti': return <CreditCard size={20} />;
-      case 'manutenzione': return <Wrench size={20} />;
-      case 'occupazione': return <Home size={20} />;
-      default: return <AlertTriangle size={20} />;
+      case 'pagamenti': return <CreditCard size={18} />;
+      case 'manutenzione': return <Wrench size={18} />;
+      case 'occupazione': return <Home size={18} />;
+      default: return <AlertTriangle size={18} />;
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl border-l-4 border-l-orange-500 border-y border-r border-slate-200 shadow-sm overflow-hidden">
-      <div className="p-5 border-b border-slate-100 flex items-center gap-3">
-        <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
-          <AlertTriangle size={20} />
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 bg-orange-50 text-orange-500 rounded-lg">
+            <AlertTriangle size={18} />
+          </div>
+          <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Alert Operativi</h2>
         </div>
-        <h2 className="text-lg font-bold text-slate-800">Alert Operativi</h2>
       </div>
       
-      <div className="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         {alerts.map((alert) => {
           const status = getAlertStatus(alert.category, alert.value);
           const styles = getStatusStyles(status);
           const iconStyles = getIconStyles(status);
           
           return (
-            <div key={alert.id} className={`p-5 rounded-xl border ${styles} flex flex-col h-full transition-all hover:shadow-md`}>
-              <div className="flex justify-between items-start mb-4">
-                <span className="px-2.5 py-1 bg-white/60 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                  {alert.city}
-                </span>
-                <div className={`p-2 rounded-lg ${iconStyles}`}>
-                  {getCategoryIcon(alert.category)}
+            <div 
+              key={alert.id} 
+              onClick={() => onNavigate(alert.link as ViewState)}
+              className={`p-4 rounded-xl border ${styles} flex flex-col transition-all cursor-pointer group`}
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-2">
+                  <div className={`p-1.5 rounded-lg ${iconStyles}`}>
+                    {getCategoryIcon(alert.category)}
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+                    {alert.city}
+                  </span>
+                </div>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ChevronRight size={16} className="opacity-50" />
                 </div>
               </div>
               
-              <div className="flex-1 mb-4">
-                <h3 className="font-bold text-base mb-1">{alert.title}</h3>
-                <p className="text-sm opacity-80">{alert.description}</p>
-              </div>
-              
-              <div className="pt-4 border-t border-black/5 mt-auto">
-                <button 
-                  onClick={() => onNavigate(alert.link as ViewState)}
-                  className="flex items-center gap-2 text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors uppercase tracking-wide"
-                >
-                  <ExternalLink size={14} />
-                  Vedi Dettagli
-                </button>
+              <div>
+                <h3 className="font-bold text-sm mb-0.5">{alert.title}</h3>
+                <p className="text-xs opacity-80">{alert.description}</p>
               </div>
             </div>
           );

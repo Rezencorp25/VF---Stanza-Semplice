@@ -29,7 +29,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
+    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <h3 className="text-lg font-bold text-slate-800">Andamento Ricavi</h3>
         
@@ -51,8 +51,8 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
         </div>
       </div>
       
-      <div className="flex-1 w-full min-h-[300px] min-w-0">
-        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+      <div className="w-full h-[300px] mt-4">
+        <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={currentData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
